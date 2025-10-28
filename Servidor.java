@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 
 public class Servidor {
 
@@ -19,12 +20,23 @@ public class Servidor {
         return numbers;
     }
 
-    public static List<Integer> getDivisibleNumbers(List<Integer> dividends, int divider) {
-        List<Integer> result = new ArrayList<>();
-
+    public static int[] getDivisibleNumbers(int[] dividends, int divider) {
+        // Primero contamos cuántos son divisibles
+        int count = 0;
         for (int num : dividends) {
             if (num % divider == 0) {
-                result.add(num);
+                count++;
+            }
+        }
+
+        // Creamos el nuevo arreglo del tamaño exacto
+        int[] result = new int[count];
+        int index = 0;
+
+        // Llenamos el nuevo arreglo
+        for (int num : dividends) {
+            if (num % divider == 0) {
+                result[index++] = num;
             }
         }
 
@@ -59,24 +71,26 @@ public class Servidor {
                 in.read(buffer, 0, contentLength);
                 body = new String(buffer);
             }
-            
+
             // Procesar mensaje SOAP
             if (body.contains("<dividends>") && body.contains("</divider>")) {
+                // Decodificar los valores de dividends
                 int start = body.indexOf("<dividends>") + 11;
                 int end = body.indexOf("</dividends>");
                 int[] dividends = stringToArray(body.substring(start, end));
 
-                int start = body.indexOf("<divider>") + 9;
-                int end = body.indexOf("</divider>");
-                String divider = body.substring(start, end);
+                // Decodificar el valor de divider
+                start = body.indexOf("<divider>") + 9;
+                end = body.indexOf("</divider>");
+                int divider = Integer.parseInt(body.substring(start, end));
 
                 // Create output array
-                int[] output = [];
-                
+                int[] output = getDivisibleNumbers(dividends, divider);
+
                 String responseXml = "<?xml version=\"1.0\"?>" +
                     "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
                         "<soap:Body>" +
-                            "<output>Servidor recibió: " + output.toString() + "</output>" +
+                            "<output>Servidor recibió: " + Arrays.toString(output) + "</output>" +
                         "</soap:Body>" +
                     "</soap:Envelope>";
                 

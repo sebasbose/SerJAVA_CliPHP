@@ -1,18 +1,20 @@
 <?php
 
-function create_message($dividends, $divisor) {
+function create_message($dividends, $divider) {
   return '<?xml version="1.0"?>
   <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
-          <dividends>" . $dividends . "</dividends>
-          <divisor>" . $divisor . "</divisor>
+          <dividends>' . $dividends . '</dividends>
+          <divider>' . $divider . '</divider>
       </soap:Body>
   </soap:Envelope>';
 }
 
-function send_soap_request($url, $soap_body) {
+function send_soap_request($dividends, $divider) {
+    $soap_body = create_message($dividends, $divider);
+
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_URL, "http://localhost:8080");
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $soap_body);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -21,7 +23,6 @@ function send_soap_request($url, $soap_body) {
     ));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    echo "Enviando mensaje: Hola desde PHP\n";
     $response = curl_exec($ch);
 
     if (curl_error($ch)) {
@@ -33,7 +34,7 @@ function send_soap_request($url, $soap_body) {
     curl_close($ch);
 }
 
-send_soap_request("http://localhost:8080", create_message("[1, 5, 23, 25, 35, 78, 30, 96]", 5));
-send_soap_request("http://localhost:8080", create_message("[3, 20, 15]", 3));
+send_soap_request("[1, 5, 23, 25, 35, 78, 30, 96]", 5);
+send_soap_request("[3, 20, 15]", 3);
 
 ?>
