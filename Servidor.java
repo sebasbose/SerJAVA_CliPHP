@@ -90,7 +90,7 @@ public class Servidor {
                 String responseXml = "<?xml version=\"1.0\"?>" +
                     "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
                         "<soap:Body>" +
-                            "<output>Servidor recibió: " + Arrays.toString(output) + "</output>" +
+                            "<output>" + Arrays.toString(output) + "</output>" +
                         "</soap:Body>" +
                     "</soap:Envelope>";
                 
